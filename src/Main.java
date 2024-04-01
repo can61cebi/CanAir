@@ -33,4 +33,4 @@ public class Main {
     }
 }
 
-// Projede hatırlatmalar için gerekli commentler eklenmektedir.
+// Projede hatırlatmalar için yorumlar eklenmektedir.
