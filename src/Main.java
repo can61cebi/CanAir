@@ -1,6 +1,8 @@
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.awt.Color;
@@ -25,6 +27,18 @@ public class Main {
         JPanel topPanel = new JPanel();
         topPanel.setBackground(new Color(35, 43, 56));
         topPanel.setPreferredSize(new Dimension(frameWidth, panelHeight));
+        topPanel.setLayout(null);
+
+        ImageIcon originalIcon = new ImageIcon("logo.png");
+        int logoHeight = panelHeight - 10;
+        int logoWidth = originalIcon.getIconWidth() * logoHeight / originalIcon.getIconHeight();
+
+        Image scaledImage = originalIcon.getImage().getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH);
+        ImageIcon scaledIcon = new ImageIcon(scaledImage);
+        JLabel logoLabel = new JLabel(scaledIcon);
+        logoLabel.setBounds(10, 5, logoWidth, logoHeight);
+        topPanel.add(logoLabel);
+
 
         String userName = DatabaseFetch.fetchUserNameById(2);
         JLabel label = new JLabel("Merhaba, " + userName);
