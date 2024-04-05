@@ -9,6 +9,10 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Main {
     public static void main(String[] args) {
@@ -40,17 +44,69 @@ public class Main {
         logoLabel.setBounds(10, 5, logoWidth, logoHeight);
         topPanel.add(logoLabel);
 
-        // "Üye Ol" butonu
+        String userName = DatabaseFetch.fetchUserNameById(2);
+        JLabel label = new JLabel("Merhaba, " + userName);
+        label.setFont(new Font("Arial", Font.BOLD, 24));
+        label.setForeground(Color.BLACK);
+        label.setBounds(10, 10, 400, 30);
+
         JButton signUpButton = new JButton("Üye Ol");
         signUpButton.setBounds(frameWidth - 245, 30, 100, 30);
         topPanel.add(signUpButton);
 
-        // "Giriş Yap" butonu
         JButton loginButton = new JButton("Giriş Yap");
         loginButton.setBounds(frameWidth - 130, 30, 100, 30);
         topPanel.add(loginButton);
 
         frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(label);
+
+        signUpButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog signUpDialog = new JDialog(frame, "Üye Ol", true);
+                signUpDialog.setLayout(new BorderLayout());
+
+                JPanel contentPanel = new JPanel(new GridBagLayout());
+                signUpDialog.add(contentPanel, BorderLayout.CENTER);
+
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.insets = new Insets(4, 4, 4, 4);
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+
+                contentPanel.add(new JLabel("Kullanıcı Adı:"), gbc);
+
+                gbc.gridx = 1;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                gbc.weightx = 1.0;
+                JTextField userNameField = new JTextField(20);
+                contentPanel.add(userNameField, gbc);
+
+                gbc.gridx = 0;
+                gbc.gridy = 1;
+                gbc.fill = GridBagConstraints.NONE;
+                gbc.weightx = 0;
+                contentPanel.add(new JLabel("Şifre:"), gbc);
+
+                gbc.gridx = 1;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                gbc.weightx = 1.0;
+                JPasswordField passwordField = new JPasswordField(20);
+                contentPanel.add(passwordField, gbc);
+
+                JPanel buttonPanel = new JPanel();
+                JButton registerButton = new JButton("Kayıt Ol");
+                buttonPanel.add(registerButton);
+                signUpDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                // kayıt olmak için gerekli veritabanı kodları gelecek.
+
+                signUpDialog.pack();
+                signUpDialog.setLocationRelativeTo(frame);
+                signUpDialog.setVisible(true);
+            }
+        });
 
         frame.setVisible(true);
     }
