@@ -189,5 +189,6 @@ public class Main {
         } else {
             greetingLabel.setText("CanAir'e Hoşgeldiniz.");
         }
+        greetingLabel.setFont(new Font("Arial", Font.BOLD, 25));
     }
 }
