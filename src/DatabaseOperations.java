@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 
 public class DatabaseOperations {
-    private static final String url = "jdbc:mariadb://localhost:3306/CANAIR";
+    private static final String url = "jdbc:mariadb://localhost:3306/CANAIR?user=root&password=3126353Can@&useSSL=false&allowPublicKeyRetrieval=true";
     private static final String user = "root";
     private static final String password = "3126353Can@";
 
