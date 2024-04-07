@@ -15,6 +15,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Main {
+    private static String currentUserName = null;
+    private static JLabel greetingLabel;
+
     public static void main(String[] args) {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double width = screenSize.getWidth();
@@ -44,12 +47,6 @@ public class Main {
         logoLabel.setBounds(10, 5, logoWidth, logoHeight);
         topPanel.add(logoLabel);
 
-        String userName = DatabaseFetch.fetchUserNameById(1);
-        JLabel label = new JLabel("Merhaba, " + userName);
-        label.setFont(new Font("Arial", Font.BOLD, 24));
-        label.setForeground(Color.BLACK);
-        label.setBounds(10, 10, 400, 30);
-
         JButton signUpButton = new JButton("Üye Ol");
         signUpButton.setBounds(frameWidth - 245, 30, 100, 30);
         topPanel.add(signUpButton);
@@ -59,7 +56,9 @@ public class Main {
         topPanel.add(loginButton);
 
         frame.add(topPanel, BorderLayout.NORTH);
-        frame.add(label);
+        greetingLabel = new JLabel();
+        updateGreeting();
+        frame.add(greetingLabel);
 
         signUpButton.addActionListener(new ActionListener() {
             @Override
@@ -166,7 +165,9 @@ public class Main {
                         boolean authenticated = DatabaseOperations.authenticateUser(userName, password);
                         if (authenticated) {
                             JOptionPane.showMessageDialog(loginDialog, "Giriş yapıldı!");
-                            loginDialog.dispose(); // Dialog'u kapat
+                            currentUserName = userName;
+                            updateGreeting();
+                            loginDialog.dispose();
                         } else {
                             JOptionPane.showMessageDialog(loginDialog, "Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.", "Hata", JOptionPane.ERROR_MESSAGE);
                         }
@@ -180,5 +181,13 @@ public class Main {
         });
 
         frame.setVisible(true);
+    }
+
+    public static void updateGreeting() {
+        if (currentUserName != null) {
+            greetingLabel.setText("Merhaba, " + currentUserName);
+        } else {
+            greetingLabel.setText("CanAir'e Hoşgeldiniz.");
+        }
     }
 }
