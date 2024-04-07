@@ -44,7 +44,7 @@ public class Main {
         logoLabel.setBounds(10, 5, logoWidth, logoHeight);
         topPanel.add(logoLabel);
 
-        String userName = DatabaseFetch.fetchUserNameById(2);
+        String userName = DatabaseFetch.fetchUserNameById(1);
         JLabel label = new JLabel("Merhaba, " + userName);
         label.setFont(new Font("Arial", Font.BOLD, 24));
         label.setForeground(Color.BLACK);
@@ -100,11 +100,82 @@ public class Main {
                 buttonPanel.add(registerButton);
                 signUpDialog.add(buttonPanel, BorderLayout.SOUTH);
 
-                // kayıt olmak için gerekli veritabanı kodları gelecek.
+                registerButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String userName = userNameField.getText();
+                        String password = new String(passwordField.getPassword());
+
+                        boolean success = DatabaseOperations.registerUser(userName, password);
+                        if (success) {
+                            JOptionPane.showMessageDialog(signUpDialog, "Kayıt başarılı!");
+                        } else {
+                            JOptionPane.showMessageDialog(signUpDialog, "Kayıt sırasında bir hata oluştu.", "Hata", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
 
                 signUpDialog.pack();
                 signUpDialog.setLocationRelativeTo(frame);
                 signUpDialog.setVisible(true);
+            }
+        });
+
+        loginButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JDialog loginDialog = new JDialog(frame, "Giriş Yap", true);
+                loginDialog.setLayout(new BorderLayout());
+
+                JPanel contentPanel = new JPanel(new GridBagLayout());
+                loginDialog.add(contentPanel, BorderLayout.CENTER);
+
+                GridBagConstraints gbc = new GridBagConstraints();
+                gbc.insets = new Insets(4, 4, 4, 4);
+                gbc.gridx = 0;
+                gbc.gridy = 0;
+
+                contentPanel.add(new JLabel("Kullanıcı Adı:"), gbc);
+
+                gbc.gridx = 1;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                gbc.weightx = 1.0;
+                JTextField userNameField = new JTextField(20);
+                contentPanel.add(userNameField, gbc);
+
+                gbc.gridx = 0;
+                gbc.gridy = 1;
+                contentPanel.add(new JLabel("Şifre:"), gbc);
+
+                gbc.gridx = 1;
+                gbc.fill = GridBagConstraints.HORIZONTAL;
+                JPasswordField passwordField = new JPasswordField(20);
+                contentPanel.add(passwordField, gbc);
+
+                JPanel buttonPanel = new JPanel();
+                JButton loginButton = new JButton("Giriş Yap");
+                buttonPanel.add(loginButton);
+                loginDialog.add(buttonPanel, BorderLayout.SOUTH);
+
+                loginButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String userName = userNameField.getText();
+                        String password = new String(passwordField.getPassword());
+
+                        boolean authenticated = DatabaseOperations.authenticateUser(userName, password);
+                        if (authenticated) {
+                            JOptionPane.showMessageDialog(loginDialog, "Giriş yapıldı!");
+                            loginDialog.dispose(); // Dialog'u kapat
+                        } else {
+                            JOptionPane.showMessageDialog(loginDialog, "Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.", "Hata", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+
+                loginDialog.pack();
+                loginDialog.setLocationRelativeTo(frame);
+                loginDialog.setVisible(true);
             }
         });
 
