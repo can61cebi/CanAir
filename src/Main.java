@@ -61,17 +61,41 @@ public class Main {
         greetingLabel.setBounds((frameWidth - 300) / 2, (panelHeight - 30) / 2, 300, 30);
         topPanel.add(greetingLabel);
 
+        ImageIcon imageIcon = new ImageIcon("background.png");
+        JLabel imageLabel = new JLabel(imageIcon);
+        imageLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
+
+        //Center Panel
         JPanel centerPanel = new JPanel();
         centerPanel.setBackground(new Color(255, 255, 255));
-        centerPanel.setPreferredSize(new Dimension(815, 185));
+        centerPanel.setPreferredSize(new Dimension(1151, 400));
+        centerPanel.add(imageLabel);
+        imageLabel.setLocation(0, 0);
+        centerPanel.revalidate();
+        centerPanel.repaint();
 
         JPanel container = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(-55, 0, 55, 0);
-
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0, 0, 0, 0);
         container.add(centerPanel, gbc);
         frame.add(container, BorderLayout.CENTER);
+
+
+
+        //Bottom Panel
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setBackground(new Color(255, 255, 255));
+        bottomPanel.setPreferredSize(new Dimension(815, 185));
+
+        JPanel containerb = new JPanel(new GridBagLayout());
+        GridBagConstraints gbcb = new GridBagConstraints();
+        gbcb.anchor = GridBagConstraints.SOUTH;
+        gbcb.insets = new Insets(0, 0, 214, 0);
+
+        containerb.add(bottomPanel, gbcb);
+        frame.add(containerb, BorderLayout.SOUTH);
 
         frame.setVisible(true);
 
