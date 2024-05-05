@@ -61,6 +61,20 @@ public class Main {
         greetingLabel.setBounds((frameWidth - 300) / 2, (panelHeight - 30) / 2, 300, 30);
         topPanel.add(greetingLabel);
 
+        JPanel centerPanel = new JPanel();
+        centerPanel.setBackground(new Color(255, 255, 255));
+        centerPanel.setPreferredSize(new Dimension(815, 185));
+
+        JPanel container = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(-55, 0, 55, 0);
+
+        container.add(centerPanel, gbc);
+        frame.add(container, BorderLayout.CENTER);
+
+        frame.setVisible(true);
+
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
