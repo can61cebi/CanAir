@@ -13,6 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import com.toedter.calendar.JDateChooser;
 
 public class Main {
     private static String currentUserName = null;
@@ -88,7 +89,7 @@ public class Main {
         JPanel container_bottom = new JPanel(new GridBagLayout());
         GridBagConstraints gbc_bottom = new GridBagConstraints();
         gbc_bottom.anchor = GridBagConstraints.SOUTH;
-        gbc_bottom.insets = new Insets(0, 0, 214, 0);
+        gbc_bottom.insets = new Insets(0, 0, 285, 0);
 
         container_bottom.add(bottomPanel, gbc_bottom);
         frame.add(container_bottom, BorderLayout.SOUTH);
