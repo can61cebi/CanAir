@@ -26,8 +26,6 @@ public class Main {
         int frameWidth = (int) (width * 0.57);
         int frameHeight = (int) (height * 0.70);
         int panelHeight = (int) (frameHeight * 0.11);
-        int imageHeight = (int) (frameHeight * 0.33);
-        int imageWidth = frameWidth;
 
         JFrame frame = new JFrame("CanAir");
         frame.setSize(frameWidth, frameHeight);
@@ -42,14 +40,6 @@ public class Main {
         ImageIcon originalIcon = new ImageIcon("logo.png");
         int logoHeight = panelHeight - 10;
         int logoWidth = originalIcon.getIconWidth() * logoHeight / originalIcon.getIconHeight();
-
-        ImageIcon originalImageIcon = new ImageIcon("image.png");
-        Image image = originalImageIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_SMOOTH);
-        ImageIcon scaledImageIcon = new ImageIcon(image);
-
-        JLabel imageLabel = new JLabel(scaledImageIcon);
-        imageLabel.setBounds(0, panelHeight, imageWidth, imageHeight);
-        frame.add(imageLabel, BorderLayout.CENTER);
 
         Image scaledImage = originalIcon.getImage().getScaledInstance(logoWidth, logoHeight, Image.SCALE_SMOOTH);
         ImageIcon scaledIcon = new ImageIcon(scaledImage);
@@ -197,7 +187,7 @@ public class Main {
         if (currentUserName != null) {
             greetingLabel.setText("Merhaba, " + currentUserName);
         } else {
-            greetingLabel.setText("CanAir'a Hoşgeldiniz.");
+            greetingLabel.setText("CanAir'e Hoşgeldiniz.");
         }
         greetingLabel.setFont(new Font("Arial", Font.BOLD, 25));
     }
