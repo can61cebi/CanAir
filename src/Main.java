@@ -65,7 +65,6 @@ public class Main {
         JLabel imageLabel = new JLabel(imageIcon);
         imageLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
 
-        //Center Panel
         JPanel centerPanel = new JPanel();
         centerPanel.setBackground(new Color(255, 255, 255));
         centerPanel.setPreferredSize(new Dimension(1151, 400));
@@ -82,20 +81,17 @@ public class Main {
         container.add(centerPanel, gbc);
         frame.add(container, BorderLayout.CENTER);
 
-
-
-        //Bottom Panel
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(new Color(255, 255, 255));
         bottomPanel.setPreferredSize(new Dimension(815, 185));
 
-        JPanel containerb = new JPanel(new GridBagLayout());
-        GridBagConstraints gbcb = new GridBagConstraints();
-        gbcb.anchor = GridBagConstraints.SOUTH;
-        gbcb.insets = new Insets(0, 0, 214, 0);
+        JPanel container_bottom = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc_bottom = new GridBagConstraints();
+        gbc_bottom.anchor = GridBagConstraints.SOUTH;
+        gbc_bottom.insets = new Insets(0, 0, 214, 0);
 
-        containerb.add(bottomPanel, gbcb);
-        frame.add(containerb, BorderLayout.SOUTH);
+        container_bottom.add(bottomPanel, gbc_bottom);
+        frame.add(container_bottom, BorderLayout.SOUTH);
 
         frame.setVisible(true);
 
