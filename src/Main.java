@@ -56,9 +56,10 @@ public class Main {
         topPanel.add(loginButton);
 
         frame.add(topPanel, BorderLayout.NORTH);
-        greetingLabel = new JLabel();
+        greetingLabel = new JLabel("CanAir'e Hoşgeldiniz.", SwingConstants.CENTER);
         updateGreeting();
-        frame.add(greetingLabel);
+        greetingLabel.setBounds((frameWidth - 300) / 2, (panelHeight - 30) / 2, 300, 30);
+        topPanel.add(greetingLabel);
 
         signUpButton.addActionListener(new ActionListener() {
             @Override
@@ -189,6 +190,7 @@ public class Main {
         } else {
             greetingLabel.setText("CanAir'e Hoşgeldiniz.");
         }
+        greetingLabel.setForeground(Color.WHITE);
         greetingLabel.setFont(new Font("Arial", Font.BOLD, 25));
     }
 }
