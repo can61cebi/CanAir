@@ -106,20 +106,45 @@ public class Main {
 
         JButton searchFlightButton = new JButton("Uçuş Ara");
 
-        GridBagConstraints gbc_button = new GridBagConstraints();
-        gbc_button.gridx = GridBagConstraints.RELATIVE;
-        gbc_button.gridy = 0;
-        gbc_button.anchor = GridBagConstraints.CENTER;
-        gbc_button.fill = GridBagConstraints.HORIZONTAL;
-        gbc_button.weightx = 1.0;
+        JLabel label1 = new JLabel("Nereden");
+        JLabel label2 = new JLabel("Nereye");
+        JLabel label3 = new JLabel("Tarih");
+        JSeparator separator1 = new JSeparator(SwingConstants.HORIZONTAL);
+        JSeparator separator2 = new JSeparator(SwingConstants.HORIZONTAL);
+        JSeparator separator3 = new JSeparator(SwingConstants.HORIZONTAL);
 
-        gbc_button.insets = new Insets(10, 20, 10, 20);
-        bottomPanel.add(comboBox1, gbc_button);
-        gbc_button.insets = new Insets(10, 20, 10, 20);
-        bottomPanel.add(comboBox2, gbc_button);
-        gbc_button.insets = new Insets(10, 20, 10, 20);
-        bottomPanel.add(dateChooser, gbc_button);
-        bottomPanel.add(searchFlightButton, gbc_button);
+        GridBagConstraints gbc_buttons = new GridBagConstraints();
+        gbc_buttons.fill = GridBagConstraints.HORIZONTAL;
+        gbc_buttons.anchor = GridBagConstraints.CENTER;
+        gbc_buttons.insets = new Insets(10, 20, 5, 20);
+
+        gbc_buttons.gridx = 0; gbc_buttons.gridy = 0;
+        bottomPanel.add(label1, gbc_buttons);
+        gbc_buttons.gridy = 1;
+        bottomPanel.add(separator1, gbc_buttons);
+
+        gbc_buttons.gridy = 2;
+        bottomPanel.add(comboBox1, gbc_buttons);
+
+        gbc_buttons.gridx = 1; gbc_buttons.gridy = 0;
+        bottomPanel.add(label2, gbc_buttons);
+        gbc_buttons.gridy = 1;
+        bottomPanel.add(separator2, gbc_buttons);
+
+        gbc_buttons.gridy = 2;
+        bottomPanel.add(comboBox2, gbc_buttons);
+
+        gbc_buttons.gridx = 2; gbc_buttons.gridy = 0;
+        bottomPanel.add(label3, gbc_buttons);
+        gbc_buttons.gridy = 1;
+        bottomPanel.add(separator3, gbc_buttons);
+
+        gbc_buttons.gridy = 2;
+        bottomPanel.add(dateChooser, gbc_buttons);
+
+        gbc_buttons.gridx = 3; gbc_buttons.gridy = 2;
+        gbc_buttons.insets = new Insets(10, 20, 10, 20); // Buton için özel padding
+        bottomPanel.add(searchFlightButton, gbc_buttons);
 
         signUpButton.addActionListener(new ActionListener() {
             @Override
