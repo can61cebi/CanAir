@@ -85,6 +85,7 @@ public class Main {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setBackground(new Color(255, 255, 255));
         bottomPanel.setPreferredSize(new Dimension(815, 185));
+        bottomPanel.setLayout(new GridBagLayout());
 
         JPanel container_bottom = new JPanel(new GridBagLayout());
         GridBagConstraints gbc_bottom = new GridBagConstraints();
@@ -94,7 +95,31 @@ public class Main {
         container_bottom.add(bottomPanel, gbc_bottom);
         frame.add(container_bottom, BorderLayout.SOUTH);
 
-        frame.setVisible(true);
+        String[] options1 = {"İstanbul", "Ankara", "İzmir"};
+        String[] options2 = {"Trabzon", "Adana", "Malatya"};
+
+        JComboBox<String> comboBox1 = new JComboBox<>(options1);
+        JComboBox<String> comboBox2 = new JComboBox<>(options2);
+
+        JDateChooser dateChooser = new JDateChooser();
+        dateChooser.setDateFormatString("dd-MM-yyyy");
+
+        JButton searchFlightButton = new JButton("Uçuş Ara");
+
+        GridBagConstraints gbc_button = new GridBagConstraints();
+        gbc_button.gridx = GridBagConstraints.RELATIVE;
+        gbc_button.gridy = 0;
+        gbc_button.anchor = GridBagConstraints.CENTER;
+        gbc_button.fill = GridBagConstraints.HORIZONTAL;
+        gbc_button.weightx = 1.0;
+
+        gbc_button.insets = new Insets(10, 20, 10, 20);
+        bottomPanel.add(comboBox1, gbc_button);
+        gbc_button.insets = new Insets(10, 20, 10, 20);
+        bottomPanel.add(comboBox2, gbc_button);
+        gbc_button.insets = new Insets(10, 20, 10, 20);
+        bottomPanel.add(dateChooser, gbc_button);
+        bottomPanel.add(searchFlightButton, gbc_button);
 
         signUpButton.addActionListener(new ActionListener() {
             @Override
