@@ -66,11 +66,10 @@ public class Main {
         JLabel imageLabel = new JLabel(imageIcon);
         imageLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
 
-        JPanel centerPanel = new JPanel();
+        JPanel centerPanel = new JPanel(new BorderLayout()); // BorderLayout kullanarak etrafındaki boşlukları minimize edin
         centerPanel.setBackground(new Color(255, 255, 255));
         centerPanel.setPreferredSize(new Dimension(1151, 400));
-        centerPanel.add(imageLabel);
-        imageLabel.setLocation(0, 0);
+        centerPanel.add(imageLabel, BorderLayout.CENTER); // BorderLayout.CENTER kullanarak imageLabel'i merkeze yerleştirin
         centerPanel.revalidate();
         centerPanel.repaint();
 
