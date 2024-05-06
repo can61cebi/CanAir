@@ -66,10 +66,10 @@ public class Main {
         JLabel imageLabel = new JLabel(imageIcon);
         imageLabel.setSize(imageIcon.getIconWidth(), imageIcon.getIconHeight());
 
-        JPanel centerPanel = new JPanel(new BorderLayout()); // BorderLayout kullanarak etrafındaki boşlukları minimize edin
+        JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBackground(new Color(255, 255, 255));
         centerPanel.setPreferredSize(new Dimension(1151, 400));
-        centerPanel.add(imageLabel, BorderLayout.CENTER); // BorderLayout.CENTER kullanarak imageLabel'i merkeze yerleştirin
+        centerPanel.add(imageLabel, BorderLayout.CENTER);
         centerPanel.revalidate();
         centerPanel.repaint();
 
@@ -142,7 +142,7 @@ public class Main {
         bottomPanel.add(dateChooser, gbc_buttons);
 
         gbc_buttons.gridx = 3; gbc_buttons.gridy = 2;
-        gbc_buttons.insets = new Insets(10, 20, 10, 20); // Buton için özel padding
+        gbc_buttons.insets = new Insets(10, 20, 10, 20);
         bottomPanel.add(searchFlightButton, gbc_buttons);
 
         signUpButton.addActionListener(new ActionListener() {
