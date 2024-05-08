@@ -187,7 +187,7 @@ public class Main {
                 if (flightId != -1) {
                     boolean assigned = DatabaseOperations.assignFlightToUser(userId, flightId);
                     if (assigned) {
-                        JOptionPane.showMessageDialog(frame, "Uçuş başarıyla bulundu ve kullanıcıya atandı!");
+                        JOptionPane.showMessageDialog(frame, "Uçuş bulundu!");
                     } else {
                         JOptionPane.showMessageDialog(frame, "Uçuş kullanıcıya atanamadı!", "Hata", JOptionPane.ERROR_MESSAGE);
                     }
