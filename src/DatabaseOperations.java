@@ -1,13 +1,17 @@
+package pkg;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.ResultSet;
+import java.util.Date;
+import java.sql.Statement;
 
 public class DatabaseOperations {
-    private static final String url = "jdbc:mariadb://localhost:3306/CANAIR?user=root&password=3126353Can@&useSSL=false&allowPublicKeyRetrieval=true";
+    private static final String url = "jdbc:mariadb://localhost:3306/CANAIR?user=root&password=cancebimaria&useSSL=false&allowPublicKeyRetrieval=true";
     private static final String user = "root";
-    private static final String password = "3126353Can@";
+    private static final String password = "cancebimaria";
 
     public static boolean registerUser(String userName, String userPassword) {
         String insertUserQuery = "INSERT INTO users (name) VALUES (?)";
@@ -70,6 +74,68 @@ public class DatabaseOperations {
             e.printStackTrace();
         }
         return false;
+    }
+    
+    public static int findOrCreateFlight(String departureCity, String arrivalCity, Date flightDate) {
+        String searchQuery = "SELECT id FROM flights WHERE departure_city = ? AND arrival_city = ? AND flight_date = ?";
+        String insertQuery = "INSERT INTO flights (departure_city, arrival_city, flight_date) VALUES (?, ?, ?)";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            try (PreparedStatement searchStmt = conn.prepareStatement(searchQuery)) {
+                searchStmt.setString(1, departureCity);
+                searchStmt.setString(2, arrivalCity);
+                searchStmt.setDate(3, new java.sql.Date(flightDate.getTime()));
+                ResultSet rs = searchStmt.executeQuery();
+                if (rs.next()) {
+                    return rs.getInt("id");
+                }
+            }
+            try (PreparedStatement insertStmt = conn.prepareStatement(insertQuery, Statement.RETURN_GENERATED_KEYS)) {
+                insertStmt.setString(1, departureCity);
+                insertStmt.setString(2, arrivalCity);
+                insertStmt.setDate(3, new java.sql.Date(flightDate.getTime()));
+                insertStmt.executeUpdate();
+                ResultSet generatedKeys = insertStmt.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+    
+    public static boolean assignFlightToUser(int userId, int flightId) {
+        String query = "INSERT INTO user_flights (user_id, flight_id) VALUES (?, ?)";
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, flightId);
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public static int getUserId(String username) {
+        String query = "SELECT id FROM users WHERE name = ?";
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("id");
+                } else {
+                    return -1;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
 }
