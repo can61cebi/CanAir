@@ -3,6 +3,7 @@
 Bu proje CanAir adlı uydurulmuş bir uçak seyahat firmasının bilet yönetim programını yapmak amaçlı oluşturulmuştur.
 
 Databaseyi oluşturma komutları:
+``` 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100)
@@ -32,8 +33,10 @@ CREATE TABLE user_flights (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (flight_id) REFERENCES flights(id)
 );
+```
 
 Databaseyi temizleme komutları:
+```
 DELETE FROM passwords;
 DELETE FROM users;
 DELETE FROM flights;
@@ -58,5 +61,6 @@ ALTER TABLE user_flights AUTO_INCREMENT = 1;
 ALTER TABLE flights AUTO_INCREMENT = 1;
 ALTER TABLE users AUTO_INCREMENT = 1;
 ALTER TABLE passwords AUTO_INCREMENT = 1;
+```
 
 <img src="https://github.com/can61cebi/CanAir/blob/main/Development_Stage_01.png" width="400">
