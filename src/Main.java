@@ -1,3 +1,5 @@
+package pkg;
+
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -14,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import com.toedter.calendar.JDateChooser;
+import java.util.Date;
 
 public class Main {
     private static String currentUserName = null;
@@ -72,7 +75,6 @@ public class Main {
         centerPanel.add(imageLabel, BorderLayout.CENTER);
         centerPanel.revalidate();
         centerPanel.repaint();
-
         JPanel container = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.NORTH;
@@ -148,120 +150,50 @@ public class Main {
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog signUpDialog = new JDialog(frame, "Üye Ol", true);
-                signUpDialog.setLayout(new BorderLayout());
-
-                JPanel contentPanel = new JPanel(new GridBagLayout());
-                signUpDialog.add(contentPanel, BorderLayout.CENTER);
-
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(4, 4, 4, 4);
-                gbc.gridx = 0;
-                gbc.gridy = 0;
-
-                contentPanel.add(new JLabel("Kullanıcı Adı:"), gbc);
-
-                gbc.gridx = 1;
-                gbc.fill = GridBagConstraints.HORIZONTAL;
-                gbc.weightx = 1.0;
-                JTextField userNameField = new JTextField(20);
-                contentPanel.add(userNameField, gbc);
-
-                gbc.gridx = 0;
-                gbc.gridy = 1;
-                gbc.fill = GridBagConstraints.NONE;
-                gbc.weightx = 0;
-                contentPanel.add(new JLabel("Şifre:"), gbc);
-
-                gbc.gridx = 1;
-                gbc.fill = GridBagConstraints.HORIZONTAL;
-                gbc.weightx = 1.0;
-                JPasswordField passwordField = new JPasswordField(20);
-                contentPanel.add(passwordField, gbc);
-
-                JPanel buttonPanel = new JPanel();
-                JButton registerButton = new JButton("Kayıt Ol");
-                buttonPanel.add(registerButton);
-                signUpDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-                registerButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String userName = userNameField.getText();
-                        String password = new String(passwordField.getPassword());
-
-                        boolean success = DatabaseOperations.registerUser(userName, password);
-                        if (success) {
-                            JOptionPane.showMessageDialog(signUpDialog, "Kayıt başarılı!");
-                        } else {
-                            JOptionPane.showMessageDialog(signUpDialog, "Kayıt sırasında bir hata oluştu.", "Hata", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                });
-
-                signUpDialog.pack();
-                signUpDialog.setLocationRelativeTo(frame);
-                signUpDialog.setVisible(true);
+                SignUpDialog signUpDialog = new SignUpDialog(frame);
+                signUpDialog.display();
             }
         });
 
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JDialog loginDialog = new JDialog(frame, "Giriş Yap", true);
-                loginDialog.setLayout(new BorderLayout());
+                LoginDialog loginDialog = new LoginDialog(frame);
+                loginDialog.display();
+            }
+        });
+        
+        int userId = getCurrentUserId();
+        
+        searchFlightButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String from = comboBox1.getSelectedItem().toString();
+                String to = comboBox2.getSelectedItem().toString();
+                Date date = dateChooser.getDate();
 
-                JPanel contentPanel = new JPanel(new GridBagLayout());
-                loginDialog.add(contentPanel, BorderLayout.CENTER);
+                if (date == null) {
+                    JOptionPane.showMessageDialog(frame, "Lütfen bir tarih seçiniz.", "Tarih Eksik", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.insets = new Insets(4, 4, 4, 4);
-                gbc.gridx = 0;
-                gbc.gridy = 0;
+                int userId = getCurrentUserId();
+                if (userId == -1) {
+                    JOptionPane.showMessageDialog(frame, "Lütfen önce giriş yapınız.", "Kullanıcı Girişi Gerekli", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
 
-                contentPanel.add(new JLabel("Kullanıcı Adı:"), gbc);
-
-                gbc.gridx = 1;
-                gbc.fill = GridBagConstraints.HORIZONTAL;
-                gbc.weightx = 1.0;
-                JTextField userNameField = new JTextField(20);
-                contentPanel.add(userNameField, gbc);
-
-                gbc.gridx = 0;
-                gbc.gridy = 1;
-                contentPanel.add(new JLabel("Şifre:"), gbc);
-
-                gbc.gridx = 1;
-                gbc.fill = GridBagConstraints.HORIZONTAL;
-                JPasswordField passwordField = new JPasswordField(20);
-                contentPanel.add(passwordField, gbc);
-
-                JPanel buttonPanel = new JPanel();
-                JButton loginButton = new JButton("Giriş Yap");
-                buttonPanel.add(loginButton);
-                loginDialog.add(buttonPanel, BorderLayout.SOUTH);
-
-                loginButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        String userName = userNameField.getText();
-                        String password = new String(passwordField.getPassword());
-
-                        boolean authenticated = DatabaseOperations.authenticateUser(userName, password);
-                        if (authenticated) {
-                            JOptionPane.showMessageDialog(loginDialog, "Giriş yapıldı!");
-                            currentUserName = userName;
-                            updateGreeting();
-                            loginDialog.dispose();
-                        } else {
-                            JOptionPane.showMessageDialog(loginDialog, "Giriş yapılamadı. Kullanıcı adı veya şifre hatalı.", "Hata", JOptionPane.ERROR_MESSAGE);
-                        }
+                int flightId = DatabaseOperations.findOrCreateFlight(from, to, date);
+                if (flightId != -1) {
+                    boolean assigned = DatabaseOperations.assignFlightToUser(userId, flightId);
+                    if (assigned) {
+                        JOptionPane.showMessageDialog(frame, "Uçuş başarıyla bulundu ve kullanıcıya atandı!");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Uçuş kullanıcıya atanamadı!", "Hata", JOptionPane.ERROR_MESSAGE);
                     }
-                });
-
-                loginDialog.pack();
-                loginDialog.setLocationRelativeTo(frame);
-                loginDialog.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Uçuş bulunamadı veya oluşturulamadı!", "Hata", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
 
@@ -277,4 +209,18 @@ public class Main {
         greetingLabel.setForeground(Color.WHITE);
         greetingLabel.setFont(new Font("Arial", Font.BOLD, 25));
     }
+    
+    public static void setCurrentUserName(String userName) {
+        currentUserName = userName;
+        updateGreeting();
+    }
+    
+    public static int getCurrentUserId() {
+        if (currentUserName == null) {
+            return -1;
+        }
+
+        return DatabaseOperations.getUserId(currentUserName);
+    }
 }
+        
