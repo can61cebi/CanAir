@@ -4,12 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class SignUpDialog extends JDialog {
+public class Register extends JDialog {
     private JTextField userNameField;
     private JPasswordField passwordField;
     private JFrame parentFrame;
 
-    public SignUpDialog(JFrame parent) {
+    public Register(JFrame parent) {
         super(parent, "Üye Ol", true);
         this.parentFrame = parent;
         initializeUI();
@@ -63,7 +63,7 @@ public class SignUpDialog extends JDialog {
     private void registerUser() {
         String userName = userNameField.getText();
         String password = new String(passwordField.getPassword());
-        boolean success = DatabaseOperations.registerUser(userName, password);
+        boolean success = Database.registerUser(userName, password);
         if (success) {
             JOptionPane.showMessageDialog(this, "Kayıt başarılı!");
             dispose();
