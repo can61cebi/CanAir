@@ -4,12 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class LoginDialog extends JDialog {
+public class Login extends JDialog {
     private JTextField userNameField;
     private JPasswordField passwordField;
     private JFrame parentFrame;
 
-    public LoginDialog(JFrame parent) {
+    public Login(JFrame parent) {
         super(parent, "Giriş Yap", true);
         this.parentFrame = parent;
         initializeUI();
@@ -61,7 +61,7 @@ public class LoginDialog extends JDialog {
     private void loginUser() {
         String userName = userNameField.getText();
         String password = new String(passwordField.getPassword());
-        boolean authenticated = DatabaseOperations.authenticateUser(userName, password);
+        boolean authenticated = Database.authenticateUser(userName, password);
         if (authenticated) {
             JOptionPane.showMessageDialog(this, "Giriş yapıldı!");
             Main.setCurrentUserName(userName);
