@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import com.toedter.calendar.JDateChooser;
 import java.util.Date;
+import pkg.Second;
 
 public class Main {
     private static String currentUserName = null;
@@ -150,7 +151,7 @@ public class Main {
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SignUpDialog signUpDialog = new SignUpDialog(frame);
+                Register signUpDialog = new Register(frame);
                 signUpDialog.display();
             }
         });
@@ -158,8 +159,8 @@ public class Main {
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                LoginDialog loginDialog = new LoginDialog(frame);
-                loginDialog.display();
+                Login Login = new Login(frame);
+                Login.display();
             }
         });
         
@@ -183,11 +184,13 @@ public class Main {
                     return;
                 }
 
-                int flightId = DatabaseOperations.findOrCreateFlight(from, to, date);
+                int flightId = Database.findOrCreateFlight(from, to, date);
                 if (flightId != -1) {
-                    boolean assigned = DatabaseOperations.assignFlightToUser(userId, flightId);
+                    boolean assigned = Database.assignFlightToUser(userId, flightId);
                     if (assigned) {
                         JOptionPane.showMessageDialog(frame, "Uçuş bulundu!");
+                        Second secondWindow = new Second(frame);
+                        secondWindow.display();
                     } else {
                         JOptionPane.showMessageDialog(frame, "Uçuş kullanıcıya atanamadı!", "Hata", JOptionPane.ERROR_MESSAGE);
                     }
@@ -220,7 +223,7 @@ public class Main {
             return -1;
         }
 
-        return DatabaseOperations.getUserId(currentUserName);
+        return Database.getUserId(currentUserName);
     }
 }
         
