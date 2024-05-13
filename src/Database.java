@@ -8,16 +8,25 @@ import java.sql.ResultSet;
 import java.util.Date;
 import java.sql.Statement;
 
-public class DatabaseOperations {
+public class Database {
     private static final String url = "jdbc:mariadb://localhost:3306/CANAIR?user=root&password=cancebimaria&useSSL=false&allowPublicKeyRetrieval=true";
     private static final String user = "root";
     private static final String password = "cancebimaria";
 
     public static boolean registerUser(String userName, String userPassword) {
+    	String userExistsQuery = "SELECT COUNT(id) FROM users WHERE name = ?";
         String insertUserQuery = "INSERT INTO users (name) VALUES (?)";
         String insertPasswordQuery = "INSERT INTO passwords (user_id, password) VALUES (?, ?)";
 
         try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            try (PreparedStatement checkUserStmt = conn.prepareStatement(userExistsQuery)) {
+                checkUserStmt.setString(1, userName);
+                ResultSet rs = checkUserStmt.executeQuery();
+                if (rs.next() && rs.getInt(1) > 0) {
+                    return false;
+                }
+            }
+        
             try (PreparedStatement stmtUser = conn.prepareStatement(insertUserQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 stmtUser.setString(1, userName);
                 int affectedRows = stmtUser.executeUpdate();
