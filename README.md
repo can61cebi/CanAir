@@ -30,6 +30,8 @@ CREATE TABLE user_flights (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     flight_id INT,
+    seat_choice VARCHAR(10),
+    travel_insurance BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (flight_id) REFERENCES flights(id)
 );
