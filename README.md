@@ -50,7 +50,7 @@ AFTER INSERT ON flights
 FOR EACH ROW
 BEGIN
     DECLARE seat_index INT DEFAULT 1;
-    WHILE seat_index <= 10 DO
+    WHILE seat_index <= 20 DO
         INSERT INTO seats (flight_id, seat_number, available) VALUES (NEW.id, CONCAT(seat_index), TRUE);
         SET seat_index = seat_index + 1;
     END WHILE;
