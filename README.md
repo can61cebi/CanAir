@@ -54,6 +54,7 @@ DELETE FROM passwords;
 DELETE FROM users;
 DELETE FROM flights;
 DELETE FROM user_flights;
+DELETE FORM seats;
 
 DELETE FROM users WHERE id = 1;
 DELETE FROM users WHERE id = 2;
@@ -143,6 +144,8 @@ ALTER TABLE user_flights AUTO_INCREMENT = 1;
 ALTER TABLE flights AUTO_INCREMENT = 1;
 ALTER TABLE users AUTO_INCREMENT = 1;
 ALTER TABLE passwords AUTO_INCREMENT = 1;
+
+TRUNCATE TABLE seats;
 ```
 
 <img src="https://github.com/can61cebi/CanAir/blob/main/Development_Stage_01.png" width="400">
