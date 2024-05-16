@@ -129,6 +129,41 @@ public class Database {
         }
     }
     
+    public static String assignFirstAvailableSeat(int userId, int flightId) {
+        String findEmptySeatQuery = "SELECT id, seat_number FROM seats WHERE flight_id = ? AND available = TRUE LIMIT 1";
+        String assignSeatQuery = "UPDATE seats SET available = FALSE WHERE id = ?";
+        String updateUserFlightQuery = "UPDATE user_flights SET seat_choice = ? WHERE user_id = ? AND flight_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            try (PreparedStatement findSeatStmt = conn.prepareStatement(findEmptySeatQuery)) {
+                findSeatStmt.setInt(1, flightId);
+                ResultSet rs = findSeatStmt.executeQuery();
+                if (rs.next()) {
+                    int seatId = rs.getInt("id");
+                    String seatNumber = rs.getString("seat_number");
+
+                    try (PreparedStatement assignSeatStmt = conn.prepareStatement(assignSeatQuery)) {
+                        assignSeatStmt.setInt(1, seatId);
+                        assignSeatStmt.executeUpdate();
+                    }
+
+                    try (PreparedStatement updateUserFlightStmt = conn.prepareStatement(updateUserFlightQuery)) {
+                        updateUserFlightStmt.setString(1, seatNumber);
+                        updateUserFlightStmt.setInt(2, userId);
+                        updateUserFlightStmt.setInt(3, flightId);
+                        updateUserFlightStmt.executeUpdate();
+                        return "Koltuk " + seatNumber + " başarıyla ayrıldı.";
+                    }
+                } else {
+                    return "Boş koltuk yok.";
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "Koltuk ataması sırasında bir hata oluştu.";
+        }
+    }
+    
     public static int getUserId(String username) {
         String query = "SELECT id FROM users WHERE name = ?";
         try (Connection conn = DriverManager.getConnection(url, user, password);
@@ -157,7 +192,7 @@ public class Database {
                     String departure = rs.getString("departure_city");
                     String arrival = rs.getString("arrival_city");
                     Date date = rs.getDate("flight_date");
-                    return "From: " + departure + " To: " + arrival + " Date: " + date.toString();
+                    return "Nereden: " + departure + " Nereye: " + arrival + " Tarih: " + date.toString();
                 }
             }
         } catch (SQLException e) {
