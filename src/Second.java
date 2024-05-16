@@ -44,7 +44,7 @@ public class Second {
     private void displayFlightDetails() {
         String flightDetails = Database.getFlightDetails(flightId);
         JLabel detailsLabel = new JLabel(flightDetails);
-        detailsLabel.setBounds(10, 10, 300, 20);
+        detailsLabel.setBounds(10, 10, 350, 200);
         frame.add(detailsLabel);
     }
 
