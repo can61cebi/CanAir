@@ -35,23 +35,11 @@ CREATE TABLE user_flights (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (flight_id) REFERENCES flights(id)
 );
-
-CREATE TABLE seats (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    flight_id INT,
-    seat_number VARCHAR(5),
-    is_occupied BOOLEAN DEFAULT FALSE,
-    FOREIGN KEY (flight_id) REFERENCES flights(id)
-);
-
-ALTER TABLE user_flights
-ADD UNIQUE KEY `unique_seat_per_flight_per_user` (`user_id`, `flight_id`);
 ```
 
 Databaseyi temizleme komutları:
 ```
 DELETE FROM user_flights;
-DELETE FROM seats;
 DELETE FROM passwords;
 
 DELETE FROM users;
