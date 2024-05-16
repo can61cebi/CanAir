@@ -35,6 +35,8 @@ public class Login extends JDialog {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0;
         contentPanel.add(new JLabel("Şifre:"), gbc);
 
         gbc.gridx = 1;
