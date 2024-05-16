@@ -146,5 +146,24 @@ public class Database {
             return -1;
         }
     }
+    
+    public static String getFlightDetails(int flightId) {
+        String query = "SELECT departure_city, arrival_city, flight_date FROM flights WHERE id = ?";
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, flightId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    String departure = rs.getString("departure_city");
+                    String arrival = rs.getString("arrival_city");
+                    Date date = rs.getDate("flight_date");
+                    return "From: " + departure + " To: " + arrival + " Date: " + date.toString();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Flight details not found.";
+    }
 
 }
