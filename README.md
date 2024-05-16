@@ -65,21 +65,22 @@ SELECT * FROM users;
 SELECT * FROM passwords;
 SELECT * FROM flights;
 SELECT * FROM user_flights;
+SELECT * FROM seats;
 ```
 
 Databaseyi temizleme komutları:
 ```
 DELETE FROM user_flights;
-DELETE FROM passwords;
-
-DELETE FROM users;
+DELETE FROM seats;
 DELETE FROM flights;
+DELETE FROM passwords;
+DELETE FROM users;
 
+ALTER TABLE users AUTO_INCREMENT = 1;
+ALTER TABLE flights AUTO_INCREMENT = 1;
 ALTER TABLE user_flights AUTO_INCREMENT = 1;
 ALTER TABLE seats AUTO_INCREMENT = 1;
 ALTER TABLE passwords AUTO_INCREMENT = 1;
-ALTER TABLE users AUTO_INCREMENT = 1;
-ALTER TABLE flights AUTO_INCREMENT = 1;
 ```
 
 <img src="https://github.com/can61cebi/CanAir/blob/main/Development_Stage_01.png" width="400">
