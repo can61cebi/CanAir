@@ -186,10 +186,10 @@ public class Main {
 
                 int flightId = Database.findOrCreateFlight(from, to, date);
                 if (flightId != -1) {
-                    boolean assigned = Database.assignFlightToUser(userId, flightId);
+                	boolean assigned = Database.assignFlightToUser(userId, flightId);
                     if (assigned) {
                         JOptionPane.showMessageDialog(frame, "Uçuş bulundu!");
-                        Second secondWindow = new Second(frame);
+                        Second secondWindow = new Second(frame, flightId);
                         secondWindow.display();
                     } else {
                         JOptionPane.showMessageDialog(frame, "Uçuş kullanıcıya atanamadı!", "Hata", JOptionPane.ERROR_MESSAGE);
@@ -226,4 +226,3 @@ public class Main {
         return Database.getUserId(currentUserName);
     }
 }
-        
