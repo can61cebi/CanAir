@@ -43,6 +43,9 @@ CREATE TABLE seats (
     is_occupied BOOLEAN DEFAULT FALSE,
     FOREIGN KEY (flight_id) REFERENCES flights(id)
 );
+
+ALTER TABLE user_flights
+ADD UNIQUE KEY `unique_seat_per_flight_per_user` (`user_id`, `flight_id`);
 ```
 
 Databaseyi temizleme komutları:
