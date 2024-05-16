@@ -33,7 +33,8 @@ CREATE TABLE user_flights (
     seat_choice VARCHAR(10),
     travel_insurance BOOLEAN,
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (flight_id) REFERENCES flights(id)
+    FOREIGN KEY (flight_id) REFERENCES flights(id),
+    UNIQUE(user_id, flight_id)
 );
 
 CREATE TABLE seats (
