@@ -1,6 +1,6 @@
 package pkg;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
@@ -9,10 +9,13 @@ import java.awt.event.WindowEvent;
 public class Second {
     private JFrame frame;
     private JFrame mainFrame;
+    private int flightId;
 
-    public Second(JFrame mainFrame) {
+    public Second(JFrame mainFrame, int flightId) {
         this.mainFrame = mainFrame;
+        this.flightId = flightId;
         initializeFrame();
+        displayFlightDetails();
     }
 
     private void initializeFrame() {
@@ -36,6 +39,13 @@ public class Second {
                 mainFrame.setVisible(true);
             }
         });
+    }
+    
+    private void displayFlightDetails() {
+        String flightDetails = Database.getFlightDetails(flightId);
+        JLabel detailsLabel = new JLabel(flightDetails);
+        detailsLabel.setBounds(10, 10, 300, 20);
+        frame.add(detailsLabel);
     }
 
     public void display() {
