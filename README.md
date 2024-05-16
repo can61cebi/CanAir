@@ -35,6 +35,28 @@ CREATE TABLE user_flights (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (flight_id) REFERENCES flights(id)
 );
+
+CREATE TABLE seats (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    flight_id INT,
+    seat_number VARCHAR(10),
+    available BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (flight_id) REFERENCES flights(id) ON DELETE CASCADE
+);
+
+DELIMITER //
+CREATE TRIGGER add_seats_after_flight_creation
+AFTER INSERT ON flights
+FOR EACH ROW
+BEGIN
+    DECLARE seat_index INT DEFAULT 1;
+    WHILE seat_index <= 10 DO
+        INSERT INTO seats (flight_id, seat_number, available) VALUES (NEW.id, CONCAT(seat_index), TRUE);
+        SET seat_index = seat_index + 1;
+    END WHILE;
+END;
+//
+DELIMITER ;
 ```
 
 Databeseyi sorgulama komutları:
