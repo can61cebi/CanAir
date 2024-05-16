@@ -37,8 +37,8 @@ CREATE TABLE user_flights (
 );
 ```
 
-```
 Databeseyi sorgulama komutları:
+```
 SELECT * FROM users;
 SELECT * FROM passwords;
 SELECT * FROM flights;
