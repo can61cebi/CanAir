@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.sql.Statement;
+import java.util.List;
+import java.util.*;
 
 public class Database {
     private static final String url = "jdbc:mariadb://localhost:3306/CANAIR?user=root&password=cancebimaria&useSSL=false&allowPublicKeyRetrieval=true";
@@ -152,7 +154,7 @@ public class Database {
                         updateUserFlightStmt.setInt(2, userId);
                         updateUserFlightStmt.setInt(3, flightId);
                         updateUserFlightStmt.executeUpdate();
-                        return "Koltuk " + seatNumber + " başarıyla ayrıldı.";
+                        return "Koltuk " + seatNumber + " tanımlandı. Şimdi değiştirebilirsiniz.";
                     }
                 } else {
                     return "Boş koltuk yok.";
@@ -192,13 +194,29 @@ public class Database {
                     String departure = rs.getString("departure_city");
                     String arrival = rs.getString("arrival_city");
                     Date date = rs.getDate("flight_date");
-                    return "Nereden: " + departure + " Nereye: " + arrival + " Tarih: " + date.toString();
+                    return "Nereden: " + departure + " , Nereye: " + arrival + " Tarih: " + date.toString();
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "Flight details not found.";
+        return "Uçuş detayları bulunamadı.";
+    }
+    
+    public static List<String> getOccupiedSeats(int flightId) {
+        List<String> occupiedSeats = new ArrayList<>();
+        String query = "SELECT seat_number FROM seats WHERE flight_id = ? AND available = FALSE";
+        try (Connection conn = DriverManager.getConnection(url, user, password);
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setInt(1, flightId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                occupiedSeats.add(String.valueOf(rs.getInt("seat_number")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return occupiedSeats;
     }
 
 }
