@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Enumeration;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Second {
     private JFrame frame;
@@ -60,31 +63,62 @@ public class Second {
         gbc.insets = new Insets(2, 2, 2, 2);
         singleGroup = new ButtonGroup();
 
-        // 20 koltuğu iki sütunda düzenleme
         for (int i = 1; i <= 20; i++) {
             JRadioButton radioButton = new JRadioButton();
             JLabel label = new JLabel("Koltuk " + i);
             
-            // Doluluk kontrolü
             if (occupiedSeats.contains(String.valueOf(i))) {
                 radioButton.setEnabled(false);
             }
 
             singleGroup.add(radioButton);
-            // Sütun hesaplaması (0 veya 1 değerini alacak)
-            gbc.gridx = (i - 1) % 2 * 2; // Çift sıra için x konumu (label için 0 veya 2, radioButton için 1 veya 3)
-            // Satır hesaplaması (0'dan başlayarak her iki koltukta bir artacak)
-            gbc.gridy = (i - 1) / 2;     // Her iki koltuktan sonra bir alt satıra geç
+            gbc.gridx = (i - 1) % 2 * 2;
+            gbc.gridy = (i - 1) / 2;
             
-            // Label'ı panele ekle
             topPanel.add(label, gbc);
             
-            // RadioButton'ı panele ekle
-            gbc.gridx++;  // RadioButton'ın konumunu label'ın hemen yanına ayarla
+            gbc.gridx++;
             topPanel.add(radioButton, gbc);
         }
+        
+        JButton saveButton = new JButton("Kaydet");
+
+        gbc.gridx = 0;
+        gbc.gridy = 10;
+        gbc.gridwidth = 4;
+        topPanel.add(saveButton, gbc);
+
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedSeat = getSelectedSeat();
+                if (selectedSeat != null) {
+                    boolean updated = Database.updateUserSeat(Main.getCurrentUserId(), flightId, selectedSeat);
+                    if (updated) {
+                        JOptionPane.showMessageDialog(frame, "Koltuk başarıyla güncellendi!");
+                    } else {
+                        JOptionPane.showMessageDialog(frame, "Koltuk güncellenirken bir hata oluştu.", "Hata", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(frame, "Lütfen bir koltuk seçiniz.", "Koltuk Seçimi Eksik", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        });
 
         frame.add(topPanel, BorderLayout.CENTER);
+    }
+
+    private String getSelectedSeat() {
+        Enumeration<AbstractButton> buttons = singleGroup.getElements();
+        int seatNumber = 1;
+        while (buttons.hasMoreElements()) {
+            AbstractButton button = buttons.nextElement();
+            if (button.isSelected()) {
+                return String.valueOf(seatNumber);
+            }
+            seatNumber++;
+        }
+        return null;
     }
     
     public void display() {
