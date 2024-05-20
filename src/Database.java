@@ -118,17 +118,38 @@ public class Database {
     }
     
     public static boolean assignFlightToUser(int userId, int flightId) {
-        String query = "INSERT INTO user_flights (user_id, flight_id) VALUES (?, ?)";
+        if (!isUserAlreadyRegistered(userId, flightId)) {
+            String query = "INSERT INTO user_flights (user_id, flight_id) VALUES (?, ?)";
+            try (Connection conn = DriverManager.getConnection(url, user, password);
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, userId);
+                stmt.setInt(2, flightId);
+                int affectedRows = stmt.executeUpdate();
+                return affectedRows > 0;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+        } else {
+            System.out.println("Kullanıcı bu uçuşa zaten kayıtlı.");
+            return false;
+        }
+    }
+    
+    public static boolean isUserAlreadyRegistered(int userId, int flightId) {
+        String query = "SELECT COUNT(*) FROM user_flights WHERE user_id = ? AND flight_id = ?";
         try (Connection conn = DriverManager.getConnection(url, user, password);
              PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.setInt(2, flightId);
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
         }
+        return false;
     }
     
     public static String assignFirstAvailableSeat(int userId, int flightId) {
@@ -154,7 +175,7 @@ public class Database {
                         updateUserFlightStmt.setInt(2, userId);
                         updateUserFlightStmt.setInt(3, flightId);
                         updateUserFlightStmt.executeUpdate();
-                        return "Koltuk " + seatNumber + " tanımlandı. Şimdi değiştirebilirsiniz.";
+                        return "" + seatNumber + ". Koltuk tanımlandı. Birazdan değiştirebilirsiniz.";
                     }
                 } else {
                     return "Boş koltuk yok.";
@@ -217,6 +238,68 @@ public class Database {
             e.printStackTrace();
         }
         return occupiedSeats;
+    }
+    
+    public static boolean updateUserSeat(int userId, int flightId, String newSeatNumber) {
+        String findSeatQuery = "SELECT id FROM seats WHERE flight_id = ? AND seat_number = ?";
+        String freeOldSeatQuery = "UPDATE seats SET available = TRUE WHERE id = ?";
+        String assignNewSeatQuery = "UPDATE seats SET available = FALSE WHERE id = ?";
+        String updateUserFlightQuery = "UPDATE user_flights SET seat_choice = ? WHERE user_id = ? AND flight_id = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+            int oldSeatId = -1;
+            int newSeatId = -1;
+
+            String findOldSeatQuery = "SELECT s.id FROM seats s JOIN user_flights uf ON s.seat_number = uf.seat_choice AND s.flight_id = uf.flight_id WHERE uf.user_id = ? AND uf.flight_id = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(findOldSeatQuery)) {
+                stmt.setInt(1, userId);
+                stmt.setInt(2, flightId);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    oldSeatId = rs.getInt("id");
+                }
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(findSeatQuery)) {
+                stmt.setInt(1, flightId);
+                stmt.setString(2, newSeatNumber);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    newSeatId = rs.getInt("id");
+                } else {
+                    return false;
+                }
+            }
+
+            conn.setAutoCommit(false);
+
+            if (oldSeatId != -1) {
+                try (PreparedStatement stmt = conn.prepareStatement(freeOldSeatQuery)) {
+                    stmt.setInt(1, oldSeatId);
+                    stmt.executeUpdate();
+                }
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(assignNewSeatQuery)) {
+                stmt.setInt(1, newSeatId);
+                stmt.executeUpdate();
+            }
+
+            try (PreparedStatement stmt = conn.prepareStatement(updateUserFlightQuery)) {
+                stmt.setString(1, newSeatNumber);
+                stmt.setInt(2, userId);
+                stmt.setInt(3, flightId);
+                stmt.executeUpdate();
+            }
+
+            conn.commit();
+            conn.setAutoCommit(true);
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
